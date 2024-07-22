@@ -1,0 +1,181 @@
+
+
+
+<div class="bg-primary text-white m-2 p-2">
+    There are {{ model.getProducts().length}} products in the repository
+</div>
+<h2>---------------BINDING--------------</h2> <br>
+<div [class]="getClasses(1)"><!--eski classı sil metod dan dönen veriyi class olarak ekle-->
+    katalogdaki ilk ürün {{model.getProductsById(1)?.name}}
+</div>
+
+
+<div [class]="getClasses(2)"><!--eski classı sil metod dan dönen veriyi class olarak ekle-->
+    katalogdaki ikinci ürün {{model.getProductsById(2)?.name}}
+</div>
+
+<button class="btn btn-primary" [class.disabled]="disabled">Submit</button>
+
+<div class="m-2 p-2" [ngClass] = "getClassMap(1)">
+    
+    katalogdaki <span [style.color]="color">ilk ürün</span>  {{model.getProductsById(1)?.name}}
+</div>
+
+<div class="m-2 p-2" [ngClass] = "getClassMap(2)">
+    
+    katalogdaki <span [ngStyle]="getStyles(2)">ikinci ürün</span>  {{model.getProductsById(1)?.name}}
+
+</div>
+<br>
+<br>
+<br>
+<br>
+
+<div (click)="onDivClick()" style="width: 500px; height: 500px; background-color: red;">
+    <button name="btn1" (click)="onSubmit($event)">Submit</button>
+    <button name="btn2" (click)="onSubmit($event)">Submit</button>
+</div>
+
+
+keyup ile input data çekme
+<input (keyup)="onKeyUp($event)"/>
+
+id ve keyup ile ile input data çekme
+<input #email (keyup.enter)="onKeyUp2(email.value)"/>
+<h2>---------------PIPES--------------</h2> <br>
+<h4>Lower-Upper-Title CasePipe</h4>
+<p>{{ title }}</p>
+<p>{{ title | lowercase }}</p>
+<p>{{ title | uppercase }}</p>
+<p>{{ title | titlecase }}</p>
+<h4>Date Pipe</h4>
+<p>{{ today }}</p>
+<p>{{ today | date}}</p>
+<p>{{ today | date: 'fullDate'}}</p>
+<p>{{ today | date: 'medium'}}</p>
+<p>{{ today | date: 'shortTime'}}</p>
+<p>{{ today | date: 'h:mm:ss'}}</p>
+<h4>Decimal Pipe</h4>
+<p>{{ students }}</p>
+<p>{{ students | number }}</p>
+<p>{{ price | number: '1.2-2' }}</p>
+<h4>Currency Pipe</h4>
+<p>{{ price | currency: 'EUR' }}</p>
+<h4>Percent Pipe</h4>
+<p>{{ completed | percent }}</p>
+<p>{{ completed | percent: '2.2-2' }}</p>
+<h2>---------------CUSTOM PIPES--------------</h2> <br>
+
+<p>{{ text | summary: 30}}</p>
+
+<h2>-------------------NGIF------------------ </h2><br>
+<div *ngIf="model.getProducts().length > 0; then productList else noProduct" class="bg-primary text-white m-2 p-2">
+    
+</div>
+
+
+<ng-template #productList><!--# işareti ile belirtilen id ile yukarıda kontrol sağlandıktan
+                                sonra(them-else) aktiflik durumunu atıyoruz-->
+    <div class="bg-primary text-white m-2 p-2">
+        There are {{ model.getProducts().length}} products in the repository
+    </div>
+</ng-template>
+<ng-template #noProduct>
+    <div class="bg-primary text-white m-2 p-2">
+        There are no products in the repository
+    </div>
+</ng-template>
+
+
+<div [hidden]="model.getProducts().length <= 0" class="bg-primary text-white m-2 p-2">
+    There are  {{ model.getProducts().length}}  products in the repository
+</div>
+<div [hidden]="model.getProducts().length > 0"  class="bg-primary text-white m-2 p-2">
+    There are no products in the repository
+</div>
+<h2>-----------------NGSWITCH------------</h2>
+<div class="bg-info m-2 p-2" [ngSwitch]="model.getProductCount()">
+    <span *ngSwitchCase="0">there are no products</span>
+    <span *ngSwitchCase="1">there are 1 product</span>
+    <span *ngSwitchCase="2">there are 2 products</span>
+    <span *ngSwitchDefault>there are many products</span>
+</div>
+<br>
+<div class="bg-info m-2 p-2" [ngSwitch]="model.getProductsById(1)?.name">
+    <span *ngSwitchCase="productName">Samsung s5</span>
+    <span *ngSwitchCase="'Samsung s6'">Samsung s6</span>
+    <span *ngSwitchCase="'Samsung s7'">Samsung s7</span>
+    <span *ngSwitchDefault>there are many products</span>
+</div>
+<h2>-----------------NGFOR------------</h2>
+
+<ul class="list-group m-5">
+    <li *ngFor="let product of model.getProducts(); index as i; first as isFirst; last as isLast;odd as isOdd; even as isEven;" class="list-group-item">
+        {{i}} - {{product.id}} - {{product.name}}
+        <span *ngIf="isFirst" class="btn btn-primary">İlk Ürün</span>
+        <span *ngIf="isLast" class="btn btn-success">Son Ürün</span>
+        <span *ngIf="isOdd" class="btn btn-danger">Tek Ürün</span>
+        <span *ngIf="isEven" class="btn btn-warning">Çift Ürün</span>
+    </li>
+</ul>
+<br>
+<br>
+<br>
+<br>
+
+<div class="m-5">
+    <button class="btn btn-primary" (click)="addProduct()">Add Product</button>
+    <ul class="list-group m-5">
+        <li *ngFor="let product of model.getProducts()" class="list-group-item">
+            {{product.name}}
+            <button class="btn btn-danger" (click)="deleteProducts(product)">{{ product.id }}--Delete Product</button>
+            <!--change detection-->
+        </li>
+    </ul>
+    
+</div>
+
+<h2>----------------NGTEMPLATE------------</h2>
+<ng-template [ngTemplateOutlet]="productList" 
+[ngTemplateOutletContext]="{products: model.getProducts()}"></ng-template>
+<!--
+<ng-template [ngTemplateOutlet]="productList" 
+[ngTemplateOutletContext]="{products: model.getProducts(), categories:}"></ng-template>
+-->
+
+<ng-template [ngTemplateOutlet]="productList"
+[ngTemplateOutletContext]="{products: model.getProducts()}"></ng-template>
+
+<ng-template #productList let-products="products" let-categories="categories">
+
+    <div class="m-5">
+        <button class="btn btn-primary" (click)="addProduct()">Add Product</button>
+        <ul class="list-group m-5">
+            <li *ngFor="let product of model.getProducts()" class="list-group-item">
+                {{product.name}}
+                <button class="btn btn-danger" (click)="deleteProducts(product)">{{ product.id }}--Delete Product</button>
+                <!--change detection-->
+            </li>
+        </ul>
+        
+    </div>
+</ng-template>
+
+<h2>-------------custom directive----------</h2>
+<input type="text" appInputMail>
+
+<h2>------------Product Listing-------------</h2><br>
+<ul>
+    <li><h3>hover(Display Selected Product) seçili ürünü göster</h3></li>
+</ul>
+<admin-product></admin-product>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
