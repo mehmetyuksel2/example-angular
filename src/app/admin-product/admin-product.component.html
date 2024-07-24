@@ -64,7 +64,30 @@
     </div>
 </div>
 
+<h2>-------------validators-------------</h2>
+<!--
+***Eposta Doğrulaması
+^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$
+***
+***Sadece Harf Doğrulaması
+^[a-zA-Z]+$
+***
+***Sadece Sayı Doğrulaması
+^[0-9]+$
+***
+***Şifre (En Az Bir Büyük Harf, Bir Küçük Harf, Bir Rakam ve 8-16 Karakter Uzunluğunda)
+^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,16}$
+***
+***Geçerli Url
+^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$
+***
+***Posta Kodu
+^[0-9]{5}$
+***
+***Tarih Doğrulaması
+^\d{4}-\d{2}-\d{2}$
 
+-->
 <div class="container">
     <div class="row">
         <div class="col-8">
@@ -74,20 +97,58 @@
                 </div>
                 <div class="form-group">
                     <label>Name</label>
-                    <input required [(ngModel)]="newProduct.name" 
-                    #name="ngModel" (change)="log(name)" type="text" class="form-control">
+                    <input required minlength="3" maxlength="10" pattern="^[a-zA-Z]+$" [(ngModel)]="newProduct.name" 
+                    #name="ngModel" type="text" name="pName" class="form-control">
+                    <!-- name alanı required olduğundan dolayı form-valid.css dosyasına inputla alakalı cssler
+                     yazdık. kullanıcı inputa giriş yapıp bir veri girmeden çıkarsa inputun solunda border yanar-->
+                    <div class="alert alert-danger" *ngIf="!name.valid && name.touched">
+                        <p *ngIf="name.errors?.['required']">Name is required</p>
+                        <p *ngIf="name.errors?.['pattern']">Only letters and spaces</p>
+                        <p *ngIf="name.errors?.['minlength']">min. 3 characters</p>
+                    </div>
+                        <!-- inputa giriş yapıp bir veri girmeden çıkılırsa altında
+                                alert yanar ve uyarı verir
+                                *** inputta başında diez işareti bulunan kod template değişkenidir
+                                *ngif ile kontrol edilen kod ise template değişkenidir-->
+                    
                 </div>
                 <div class="form-group">
                     <label>description</label>
-                    <textarea [(ngModel)]="newProduct.description" type="text" class="form-control"></textarea>
+                    <textarea required minlength="10" maxlength="500" pattern="^[a-zA-Z]+$" [(ngModel)]="newProduct.description"
+                     #description="ngModel" name="Description" type="text"
+                      class="form-control" (change)="log(description)"></textarea>
                 </div>
+                <div class="alert alert-danger" *ngIf="!description.valid && description.touched">
+                    <p *ngFor="let error of getValidationErrors(description)">
+                        <!--hata listesi getirir-->
+                        {{error}}
+                    </p>
+                </div>
+                <!--getValidationErrors fonksiyonuna gönderdiğimiz description ngModel içerisinden gelmekte
+                ve biz bu ngModelin içerisindeki bütün parametrelere ulaşabilmekteyiz -->
+            
+                <!-- inputa giriş yapıp bir veri girmeden çıkılırsa altında alert yanar ve uyarı verir
+                    *** textareada başında diez işareti bulunan kod template değişkenidir
+                    *ngif ile kontrol edilen kod ise template değişkenidir-->
                 <div class="form-group">
                     <label>image Url</label>
-                    <input [(ngModel)]="newProduct.imageUrl" type="text" class="form-control">
+                    <input required [(ngModel)]="newProduct.imageUrl" name="pImageUrl" #imageUrl="ngModel" type="text" class="form-control">
+                </div>
+                <div class="alert alert-danger" *ngIf="!imageUrl.valid && imageUrl.touched">
+                    Name is required<!-- inputa giriş yapıp bir veri girmeden çıkılırsa altında
+                                        alert yanar ve uyarı verir
+                                *** inputta başında diez işareti bulunan kod template değişkenidir
+                                *ngif ile kontrol edilen kod ise template değişkenidir-->
                 </div>
                 <div class="form-group">
                     <label>price</label>
-                    <input [(ngModel)]="newProduct.price" type="text" class="form-control">
+                    <input required [(ngModel)]="newProduct.price" #price="ngModel" name="pPrice" type="text" class="form-control">
+                </div>
+                <div class="alert alert-danger" *ngIf="!price.valid && price.touched">
+                    Name is required<!-- inputa giriş yapıp bir veri girmeden çıkılırsa altında
+                                        alert yanar ve uyarı verir
+                                *** inputta başında diez işareti bulunan kod template değişkenidir
+                                *ngif ile kontrol edilen kod ise template değişkenidir-->
                 </div>
                 <button class="btn btn-primary" (click)="addProduct(newProduct)">Submit</button>
             </div>
