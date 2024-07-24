@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Product } from '../product.model';
 import { ProductComponent } from '../product.component';
 import { ProductRepository } from '../repository.mode';
+import { state } from '@angular/animations';
 
 @Component({
   selector: 'admin-product',
@@ -49,12 +50,35 @@ export class AdminProductComponent {
   }
   addProduct(p: Product){
     console.log("new product:"+ this.jsonProduct);//eklenen ürünün json uzantılı hali yazdırılır
+    //detaylı incele
+  }
+  log(x:any){
+    console.log(x);
+  }
+  getValidationErrors(state: any): any[] {
+    let ctrlName: string = state.name;//ng modelden name parametresini çektik
+    let messages: string[] = [];
+    if(state.errors){
+      for(let errorName in state.errors){//ngmodeldeki errorsları listeledik ve errorname atadık
+        switch(errorName){//error ismine göre mesaj dizisine değer atadık
+          case "required": 
+            messages.push(`you must enter a ${ctrlName}`);break;
+            case "minlength": 
+              messages.push(`min. 3 characters ${ctrlName}`);break;
+            
+            case "pattern": 
+            messages.push(`you must enter a ${ctrlName}`);break;
+              
+            case "pattern": 
+            messages.push(`${ctrlName} contains illegal characters`);break;
+          
+
+        }
+      }
+    }
+    return messages;
   }
 
-  log(value: any): void {
-    console.log(value);
-  }
-  
 
   
 
