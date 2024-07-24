@@ -2,11 +2,11 @@
     <div class="row">
         <div class="col-md-6">
             <div class="m-5">
-                <div class="bg-info text-white p-2">
-                    Selected Product: {{selectedProduct || '(None)'}}
+                <div class="bg-info text-white p-2" *ngIf="selected">
+                    Selected Product: {{ selectedProduct.name || '(None)'}}
                     <!--boş olan selectedproduct doldurulduğunda ürünün ismi div içine aktarılır-->
                 </div>
-                <table class="table table-sm table-bordered">
+                <table class="">
                     <thead>
                         <tr>
                             <th>Id</th>
@@ -17,31 +17,79 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let product of products" (mouseover)="selectedProduct = product.name"
-                        (mouseleave)="selectedProduct='(None)'"
-                        
-                        ><!--tek tırnak içerisinde repository metodları görürken çift tırnakta neden admin
+                        <!-- <tr *ngFor="let product of products"
+                                (mouseover)="pName.value=product.name!"
+                                (mouseleave)="pName.value='None'"
+                                [class.bg-warning]="pName.value==product.name"> -->
+                        <tr *ngFor="let product of products"
+                        [class.bg-warning]="getSelected(product)">
+                        <!--tek tırnak içerisinde repository metodları görürken çift tırnakta neden admin
                         product metodları görünüyor-->
                         <!--mouse üzerinden ayrıldığında değişkene none atanır-->
                             <!--mouseover- mouse üzerine geldiğinde boş olan selectedproduct a ürün ismi ataması
                             yapılır ^ yukarı bak-->
-                            <td [class.bg-info]="getSelected(product)">{{product.id}}</td>
-                            <td [class.bg-info]="getSelected(product)"><img src="{{product.imageUrl}}" width="80"></td>
-                            <td [class.bg-info]="getSelected(product)">{{product.name}}</td>
-                            <td [class.bg-info]="getSelected(product)">{{product.price}}</td>
-                            <td [class.bg-info]="getSelected(product)">
+                            <td>{{product.id}}</td>
+                            <td><img src="{{product.imageUrl}}" width="80"></td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.price}}</td>
+                            <td>
                                 <button class="btn btn-danger btn-sm">Delete</button>
-                                <button class="btn btn-primary btn-sm">Update</button>
+                                <button (click)="editProduct(product)" class="btn btn-primary btn-sm ml-2">Edit</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" *ngIf="selected">
             <div class="form-group">
-                <label>Product Name</label>
-                <input (input)="textSelected($event)" type="text" class="form-control">
+                <label>Product Name</label><!--input eventi her tuşta çalışır-->
+                <input [(ngModel)]="selectedProduct.name" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Product Price</label><!--input eventi her tuşta çalışır-->
+                <input [(ngModel)]="selectedProduct.price" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Product Image Url</label><!--input eventi her tuşta çalışır-->
+                <input [(ngModel)]="selectedProduct.imageUrl" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Product Description</label><!--input eventi her tuşta çalışır-->
+                <textarea [(ngModel)]="selectedProduct.description" type="text" class="form-control"></textarea>
+            </div>
+            <button class="btn btn-primary" 
+            (click)="saveChanges();">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <div class="m-3">
+                <div class="bg-info text-white m-2 p-2">
+                    {{jsonProduct}}
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input required [(ngModel)]="newProduct.name" 
+                    #name="ngModel" (change)="log(name)" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>description</label>
+                    <textarea [(ngModel)]="newProduct.description" type="text" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>image Url</label>
+                    <input [(ngModel)]="newProduct.imageUrl" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>price</label>
+                    <input [(ngModel)]="newProduct.price" type="text" class="form-control">
+                </div>
+                <button class="btn btn-primary" (click)="addProduct(newProduct)">Submit</button>
             </div>
         </div>
     </div>
