@@ -3,6 +3,7 @@ import { Product } from '../product.model';
 import { ProductComponent } from '../product.component';
 import { ProductRepository } from '../repository.mode';
 import { state } from '@angular/animations';
+import { Form } from '@angular/forms';
 
 @Component({
   selector: 'admin-product',
@@ -77,6 +78,10 @@ export class AdminProductComponent {
       }
     }
     return messages;
+  }
+
+  SubmitForm(form: Form){
+    console.log(form);
   }
 
 
