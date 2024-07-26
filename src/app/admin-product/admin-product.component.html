@@ -92,7 +92,18 @@
     <div class="row">
         <div class="col-8">
             <div class="m-3">
-                <form #form="ngForm" (ngSubmit)="SubmitForm(form)">
+                <form #form="ngForm" (ngSubmit)="SubmitForm(form)"><!--ngSubmit ile form submit edilir-->
+                    <div class="bg-danger text-white p-3 my-2" *ngIf="formSubmited && form.invalid">
+                        Bir Hata Oluştu bilgilerinizi kontrol ediniz
+                        <ul class="alert alert-danger" *ngIf="(formSubmited ||description.dirty) && !description.valid">
+                            <!--form gönderildiyse yada descriptiona girilip geri çıkıldıysa ve valid olmadıysa
+                            errorları göster-->
+                            <li *ngFor="let error of getValidationErrors(description,'description')">
+                                <!--hata listesi getirir-->
+                                {{error}}
+                            </li>
+                        </ul>
+                    </div>
                     <div class="bg-info text-white m-2 p-2">
                         {{jsonProduct}}
                     </div>
@@ -102,11 +113,15 @@
                         #name="ngModel" type="text" name="pName" class="form-control">
                         <!-- name alanı required olduğundan dolayı form-valid.css dosyasına inputla alakalı cssler
                         yazdık. kullanıcı inputa giriş yapıp bir veri girmeden çıkarsa inputun solunda border yanar-->
-                        <div class="alert alert-danger" *ngIf="!name.valid && name.touched">
-                            <p *ngIf="name.errors?.['required']">Name is required</p>
-                            <p *ngIf="name.errors?.['pattern']">Only letters and spaces</p>
-                            <p *ngIf="name.errors?.['minlength']">min. 3 characters</p>
-                        </div>
+                        
+                        <ul class="alert alert-danger" *ngIf="(formSubmited ||name.dirty) && !name.valid">
+                            <!--form gönderildiyse yada descriptiona girilip geri çıkıldıysa ve valid olmadıysa
+                            errorları göster-->
+                            <li *ngFor="let error of getValidationErrors(name)">
+                                <!--hata listesi getirir-->
+                                {{error}}
+                            </li>
+                        </ul>
                             <!-- inputa giriş yapıp bir veri girmeden çıkılırsa altında
                                     alert yanar ve uyarı verir
                                     *** inputta başında diez işareti bulunan kod template değişkenidir
@@ -119,12 +134,14 @@
                         #description="ngModel" name="Description" type="text"
                         class="form-control" (change)="log(description)"></textarea>
                     </div>
-                    <div class="alert alert-danger" *ngIf="!description.valid && description.touched">
-                        <p *ngFor="let error of getValidationErrors(description)">
+                    <ul class="alert alert-danger" *ngIf="(formSubmited ||description.dirty) && !description.valid">
+                        <!--form gönderildiyse yada descriptiona girilip geri çıkıldıysa ve valid olmadıysa
+                        errorları göster-->
+                        <li *ngFor="let error of getValidationErrors(description)">
                             <!--hata listesi getirir-->
                             {{error}}
-                        </p>
-                    </div>
+                        </li>
+                    </ul>
                     <!--getValidationErrors fonksiyonuna gönderdiğimiz description ngModel içerisinden gelmekte
                     ve biz bu ngModelin içerisindeki bütün parametrelere ulaşabilmekteyiz -->
                 
@@ -135,25 +152,75 @@
                         <label>image Url</label>
                         <input required [(ngModel)]="newProduct.imageUrl" name="pImageUrl" #imageUrl="ngModel" type="text" class="form-control">
                     </div>
-                    <div class="alert alert-danger" *ngIf="!imageUrl.valid && imageUrl.touched">
-                        Name is required<!-- inputa giriş yapıp bir veri girmeden çıkılırsa altında
-                                            alert yanar ve uyarı verir
-                                    *** inputta başında diez işareti bulunan kod template değişkenidir
-                                    *ngif ile kontrol edilen kod ise template değişkenidir-->
-                    </div>
+                    <ul class="alert alert-danger" *ngIf="(formSubmited ||imageUrl.dirty) && !imageUrl.valid">
+                        <!--form gönderildiyse yada descriptiona girilip geri çıkıldıysa ve valid olmadıysa
+                        errorları göster-->
+                        <li *ngFor="let error of getValidationErrors(imageUrl)">
+                            <!--hata listesi getirir-->
+                            {{error}}
+                        </li>
+                    </ul>
                     <div class="form-group">
                         <label>price</label>
                         <input required [(ngModel)]="newProduct.price" #price="ngModel" name="pPrice" type="text" class="form-control">
                     </div>
-                    <div class="alert alert-danger" *ngIf="!price.valid && price.touched">
-                        Name is required<!-- inputa giriş yapıp bir veri girmeden çıkılırsa altında
-                                            alert yanar ve uyarı verir
-                                    *** inputta başında diez işareti bulunan kod template değişkenidir
-                                    *ngif ile kontrol edilen kod ise template değişkenidir-->
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <ul class="alert alert-danger" *ngIf="(formSubmited ||price.dirty) && !price.valid">
+                        <!--form gönderildiyse yada descriptiona girilip geri çıkıldıysa ve valid olmadıysa
+                        errorları göster-->
+                        <li *ngFor="let error of getValidationErrors(price)">
+                            <!--hata listesi getirir-->
+                            {{error}}
+                        </li>
+                    </ul>
+                    <button 
+                    type="submit"
+                     class="btn btn-primary" [disabled]="formSubmited && form.invalid"
+                     [class.btn-secondary]="formSubmited && form.invalid">
+                        Submit
+                    </button>
                 </form>
             </div>
         </div>
     </div>
+</div>
+
+
+<h2>------------Reactive Forms (Validators with TS) ---------------</h2>
+<div class="container">
+    <form [formGroup]="ders69_productForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" formControlName="ders68_name">
+            <div class="alert alert-danger" *ngIf="ders70_name!.touched && ders70_name!.invalid">
+                <ul>
+                    <li *ngIf="ders69_productForm.get('ders68_name')!.errors?.['required']">Name is required.</li>
+                    <li *ngIf="ders69_productForm.get('ders68_name')!.errors?.['minlength']">Min. {{ders69_productForm.get('ders68_name')!.errors?.['minlength'].requiredLength}} characters</li>
+                    <li *ngIf="ders69_productForm.get('ders68_name')!.errors?.['maxlength']">Max. {{ders69_productForm.get('ders68_name')!.errors?.['maxlength'].requiredLength}} characters</li>
+                </ul>
+            </div>
+            
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" class="form-control" formControlName="ders68_description">
+            
+        </div>
+        <div class="form-group">
+            <label>Price</label>
+            <input type="text" class="form-control" formControlName="ders68_price">
+        </div>
+        <div class="form-group">
+            <label>İmage Url</label>
+            <input type="text" class="form-control" formControlName="ders68_imageUrl">
+            <div class="alert alert-danger" *ngIf="ders72_Image!.touched && ders72_Image!.invalid">
+                <ul>
+                    <li *ngIf="ders72_Image!.errors?.['required']">Name is required.</li>
+                    <li *ngIf="ders72_Image!.errors?.['wrongExtension']">Wrong Extension</li>
+                    <!--imagevalidators.ts'den true dönen wrongExtension buradaki hatayı fırlatır-->
+                </ul>
+            </div>
+        </div>
+        <br>
+        <button type="submit" (click)="updateProduct()" class="btn btn-primary">Submit</button>
+    </form>
 </div>
