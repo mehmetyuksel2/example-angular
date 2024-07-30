@@ -8,20 +8,24 @@ import { CommonModule } from '@angular/common';
 import { SummaryPipe } from './summary.pipe';
 import { InputMailDirective } from './input-mail.directive';
 import { AdminProductComponent } from './admin-product/admin-product.component';
+import { PostComponent } from './post/post.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     ProductComponent,
     SummaryPipe,
     InputMailDirective,
-    AdminProductComponent
+    AdminProductComponent,
+    PostComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [
     provideClientHydration()
