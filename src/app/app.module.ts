@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppRoutingModule88child } from './productdetail/app-routing.module';
+import { AppRoutingModule88child } from './app-routing.module';
 import { ProductComponent } from './product.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,6 +19,10 @@ import { NotfoundComponent } from './notfound/notfound.component';
 import { ProductdetailComponent } from './productdetail/productdetail.component';
 import { ProductEditComponent } from './product-edit/product-edit.component';
 import { UserComponent } from './user/user.component';
+import { AdminModule } from './admin/admin.module';
+import { AuthGuard } from './auth-guard.service';
+import { AuthService } from './auth.service';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -35,11 +37,13 @@ import { UserComponent } from './user/user.component';
     UsersComponent,
     CategoriesComponent,
     ProductdetailComponent,
-    ProductEditComponent
+    ProductEditComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    AdminModule,
+    AppRoutingModule88child,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -47,7 +51,7 @@ import { UserComponent } from './user/user.component';
     AppRoutingModule88child
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),AuthGuard,AuthService
   ],
   bootstrap: [ProductComponent]
 })
